@@ -2,13 +2,28 @@
 
 import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { BarchartComponent } from './shared/barchart/barchart.component';
+import { Http, ConnectionBackend, BaseRequestOptions } from '@angular/http';
+import { MockBackend } from '@angular/http/testing';
+import { DataService } from './shared/services/data.service';
 
 describe('AppComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [
-        AppComponent
+        AppComponent,
+        BarchartComponent
       ],
+      providers: [
+        {
+          provide: Http, useFactory: (backend: ConnectionBackend, defaultOptions: BaseRequestOptions) => {
+            return new Http(backend, defaultOptions);
+          }, deps: [MockBackend, BaseRequestOptions]
+        },
+      {provide: MockBackend, useClass: MockBackend},
+      {provide: BaseRequestOptions, useClass: BaseRequestOptions},
+        DataService,
+        ]
     });
     TestBed.compileComponents();
   });
@@ -25,10 +40,10 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('app works!');
   }));
 
-  it('should render title in a h1 tag', async(() => {
-    let fixture = TestBed.createComponent(AppComponent);
+  it('should create barchart element', async(() => {
+    let fixture = TestBed.createComponent(BarchartComponent);
     fixture.detectChanges();
-    let compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('h1').textContent).toContain('app works!');
+    let barchart = fixture.debugElement.componentInstance;
+    expect(barchart).toBeTruthy();
   }));
 });

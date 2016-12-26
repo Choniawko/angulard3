@@ -1,5 +1,5 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
@@ -11,6 +11,9 @@ import { DataService } from '../services/data.service';
 describe('BarchartComponent', () => {
   let component: BarchartComponent;
   let fixture: ComponentFixture<BarchartComponent>;
+  let users:any[];
+  let dataService: DataService;
+  let spy:any;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -32,10 +35,23 @@ describe('BarchartComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(BarchartComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    dataService = fixture.debugElement.injector.get(DataService);
+    
+    //component.getData();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  
+  it('getData', () => {
+
+    dataService.getData().subscribe(data => {
+      expect(component.users).toBeTruthy();
+    });        
+    
+
+  });
+  
 });

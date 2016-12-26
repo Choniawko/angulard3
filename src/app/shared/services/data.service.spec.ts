@@ -24,4 +24,11 @@ describe('DataService', () => {
   it('should ...', inject([DataService], (service: DataService) => {
     expect(service).toBeTruthy();
   }));
-});
+
+  it('should get 9 element list user array', inject([DataService], (service: DataService) => {
+    service.getData().subscribe((users) => {
+      expect(users.length).toEqual(9);
+    });
+  }));
+
+  });

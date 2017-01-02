@@ -7,15 +7,20 @@ import { BarchartComponent } from './barchart.component';
 import { Http, ConnectionBackend, BaseRequestOptions } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { DataService } from '../services/data.service';
+import * as  d3 from 'd3';
 
-describe('BarchartComponent', () => {
+describe('BarchartComponent', function () {
   let component: BarchartComponent;
   let fixture: ComponentFixture<BarchartComponent>;
   let users:any[];
   let dataService: DataService;
   let spy:any;
 
-  beforeEach(async(() => {
+  let margin = { top: 10, right: 20, bottom: 150, left: 40 };
+      let width  = 700 - margin.left - margin.right;
+      let height = 500 - margin.top - margin.bottom;
+
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ BarchartComponent ],
       providers: [
@@ -30,14 +35,12 @@ describe('BarchartComponent', () => {
         ]
     })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(BarchartComponent);
     component = fixture.componentInstance;
     dataService = fixture.debugElement.injector.get(DataService);
-    
-    //component.getData();
   });
 
   it('should create', () => {
@@ -46,12 +49,24 @@ describe('BarchartComponent', () => {
 
   
   it('getData', () => {
-
     dataService.getData().subscribe(data => {
       expect(component.users).toBeTruthy();
-    });        
-    
-
+    });  
   });
+
+  it('the svg should be created', () => {
+    expect(getSvg()).not.toBeNull();
+  });
+
+    
+  function getSvg() {
+    return d3.select('svg');
+  }
+
+
   
 });
+
+
+
+  

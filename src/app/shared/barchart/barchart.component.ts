@@ -1,6 +1,8 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation, ViewContainerRef } from '@angular/core';
 import { DataService } from '../services/data.service';
 import * as  d3 from 'd3';
+import { devConsole } from '../console';
+let save = require('save-svg-as-png');
 
 @Component({
   selector: 'app-barchart',
@@ -14,7 +16,7 @@ export class BarchartComponent implements OnInit {
   margin = { top: 10, right: 20, bottom: 150, left: 40 };
   width  = 700 - this.margin.left - this.margin.right;
   height = 500 - this.margin.top - this.margin.bottom;
-  @ViewChild('chart') svg;
+  @ViewChild('chart', {read: ViewContainerRef}) svg;
   constructor(private _dataService:DataService) { }
 
   ngOnInit() {
@@ -24,8 +26,32 @@ export class BarchartComponent implements OnInit {
     this._dataService.getData()
       .subscribe(data => {
         this.users = data;
+      }, err => {devConsole.log({err} ) },
+      () => {
         this.drawChart();
       });
+  }
+
+  generatePDF() {
+      devConsole.log(this.svg.nativeElement);
+    this.convertToPdf(this.svg, doc => {
+
+    })
+  }
+
+  convertToPdf(svg, callback) {
+    save.svgAsDataUri(this.svg, {}, svgUri => {
+        let $image = document.createElement('img'),
+            		image = $image[0];
+                    image.src = svgUri;
+                    console.log($image, image)
+    })
+  }
+
+  downloadPdf(fileName, pdfDoc) {
+    let $link = document.createElement('a'),
+        		link = $link[0],
+        		dataUriString = pdfDoc.output('dataurlstring');
   }
 
   drawChart = () => {
